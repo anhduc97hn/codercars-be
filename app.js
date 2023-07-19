@@ -23,4 +23,16 @@ mongoose.connect(process.env.MONGO_URI, () => {
 
 app.use('/', indexRouter);
 
+app.use((req,res,next)=>{
+    const exception = new Error(`Path not found`);
+    exception.statusCode = 404;
+    next(exception)
+})
+
+app.use((err,req,res,next)=>{
+    console.error(err)
+    res.status(err.statusCode || 500).send(err.message);
+})
+
+
 module.exports = app;
